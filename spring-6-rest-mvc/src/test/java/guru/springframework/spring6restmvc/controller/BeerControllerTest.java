@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +49,7 @@ class BeerControllerTest {
     }
 
     @Test
-    public void patchBeerTest() throws Exception {
+    void patchBeerTest() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
@@ -66,7 +67,7 @@ class BeerControllerTest {
     }
 
     @Test
-    public void deleteBeerTest() throws Exception {
+    void deleteBeerTest() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
         mockMvc.perform(delete(BeerController.BEER_PATH_ID, testBeer.getId())
@@ -78,7 +79,7 @@ class BeerControllerTest {
     }
 
     @Test
-    public void updateBeerTest() throws Exception {
+    void updateBeerTest() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
         mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeer.getId())
@@ -91,7 +92,7 @@ class BeerControllerTest {
     }
 
     @Test
-    public void createBeerTest() throws Exception {
+    void createBeerTest() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
         testBeer.setVersion(null);
         testBeer.setId(null);
@@ -121,11 +122,21 @@ class BeerControllerTest {
     }
 
     @Test
+    void getByIdNotFoundTest() throws Exception {
+
+        given(beerService.getById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
     void getById() throws Exception {
 
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
-        given(beerService.getById(any(UUID.class))).willReturn(testBeer);
+        given(beerService.getById(any(UUID.class))).willReturn(Optional.of(testBeer));
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID())
                         .accept(MediaType.APPLICATION_JSON))
