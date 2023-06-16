@@ -11,14 +11,14 @@ public class Spring6RestMvcApplication {
     }
 
 }
-/*Assignment - Handle HTTP Post for Create new Customer
+/*Populate database with test data
 
-Create Controller method to handle post
+Challenge - Use same method as shown previously in course
 
-Update Request Mapping
+Okay to emulate map initialization - DO NOT SET ID and Version
 
-Save to in-memory hash map
+Initialize data for both Beer and Customer entities
 
-Return 201 status with location of created customer object
+Alter repository tests to verify data initialization
 
  */
