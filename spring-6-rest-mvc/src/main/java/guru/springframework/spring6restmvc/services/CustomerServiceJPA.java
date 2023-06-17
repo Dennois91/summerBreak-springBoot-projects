@@ -1,16 +1,17 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.mappers.CustomerMapper;
+import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.model.CustomerDTO;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,18 +36,34 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public CustomerDTO saveNewCustomer(CustomerDTO customerDTO) {
-        return null;
+        return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customerDTO)));
     }
 
     @Override
-    public void updateById(UUID customerId, CustomerDTO customerDTO) {
+    public Optional<CustomerDTO> updateById(UUID customerId, CustomerDTO customerDTO) {
+
+        AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
+
+        customerRepository.findById(customerId).ifPresentOrElse(foundBeer -> {
+            foundBeer.setCustomerName(customerDTO.getCustomerName());
+            atomicReference.set(Optional.of(customerMapper
+                    .customerToCustomerDto(customerRepository.save(foundBeer))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
+        return atomicReference.get();
 
     }
 
     @Override
-    public void deleteById(UUID customerId) {
-
+    public boolean deleteById(UUID customerId) {
+        if (customerRepository.existsById(customerId)) {
+            customerRepository.deleteById(customerId);
+            return true;
+        }
+        return false;
     }
+
 
     @Override
     public void patchById(UUID customerId, CustomerDTO customerDTO) {

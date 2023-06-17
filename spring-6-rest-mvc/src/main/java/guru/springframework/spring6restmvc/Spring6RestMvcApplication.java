@@ -11,14 +11,15 @@ public class Spring6RestMvcApplication {
     }
 
 }
-/*Populate database with test data
+/*
+Complete Integration Tests and Implementations for Save New, Update by Id, Delete by Id, and Patch Customer
 
-Challenge - Use same method as shown previously in course
+Use TDD
 
-Okay to emulate map initialization - DO NOT SET ID and Version
+Include not found logic to provide HTTP 404 when not found
 
-Initialize data for both Beer and Customer entities
+Refactor methods as needed
 
-Alter repository tests to verify data initialization
+Assignment Review will be in a code review format, not live code
 
  */
