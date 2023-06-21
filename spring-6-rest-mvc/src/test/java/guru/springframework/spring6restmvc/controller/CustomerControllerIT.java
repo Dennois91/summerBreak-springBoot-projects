@@ -2,7 +2,6 @@ package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.entities.Customer;
 import guru.springframework.spring6restmvc.mappers.CustomerMapper;
-import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.model.CustomerDTO;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +24,7 @@ class CustomerControllerIT {
     CustomerController customerController;
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
     CustomerMapper customerMapper;
 
     @Test
@@ -85,11 +85,36 @@ class CustomerControllerIT {
         });
     }
 
+    @Transactional
+    @Rollback
+    @Test
     void updateCustomerTest() {
+        Customer customer = customerRepository.findAll().get(0);
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
+        customerDTO.setVersion(null);
+        customerDTO.setId(null);
+        String name = "UPDATED";
+        customerDTO.setCustomerName(name);
 
+        ResponseEntity response = customerController.updateById(customer.getId(), customerDTO);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(customerRepository.findById(customer.getId()).get().getCustomerName())
+                .isEqualTo(name);
     }
 
+    @Test
     void patchCustomerTest() {
+        Customer customer = customerRepository.findAll().get(0);
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
+        customerDTO.setId(null);
+        customerDTO.setVersion(null);
+        String name = "PATCHED";
+        customerDTO.setCustomerName(name);
+
+        ResponseEntity response = customerController.patchById(customer.getId(), customerDTO);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(customerRepository.findById(customer.getId()).get().getCustomerName())
+                .isEqualTo(name);
 
     }
 
@@ -103,21 +128,18 @@ class CustomerControllerIT {
         assertThat(customerDTOS.size()).isEqualTo(0);
     }
 
+    @Test
     void deleteByIdNotFoundTest() {
-
+        assertThrows(NotFoundException.class, () -> {
+            customerController.deleteById(UUID.randomUUID());
+        });
     }
-
 }
 /*
-Complete Integration Tests and Implementations for Save New, Update by Id, Delete by Id, and Patch Customer
-
+Complete Integration Tests and Implementations for  Update by Id, and Patch Customer
 Use TDD
-
 Also, implement JPA Patch operation for Beer entity - Very Similar to Update by Id
-
 Include not found logic to provide HTTP 404 when not found
-
 Refactor methods as needed
-
 Assignment Review will be in a code review format, not live code
  */
