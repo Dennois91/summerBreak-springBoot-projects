@@ -1,0 +1,25 @@
+package guru.springframework.spring6restmvc.services;
+
+import guru.springframework.spring6restmvc.model.BeerCSVRecord;
+import org.junit.jupiter.api.Test;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class BeerCsvServiceImplTest {
+    BeerCsvService beerCsvService = new BeerCsvServiceImpl();
+
+    @Test
+    void convertCsvToList() throws FileNotFoundException {
+
+        File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+
+        List<BeerCSVRecord> recs = beerCsvService.convertCSVToList(file);
+
+        assertThat(recs.size()).isGreaterThan(0);
+    }
+}
