@@ -1,16 +1,17 @@
 package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.model.BeerDTO;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -39,7 +40,7 @@ public class BeerController {
     }
 
     @PutMapping({BEER_PATH_ID})
-    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId,@Validated @RequestBody BeerDTO beerDTO) {
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beerDTO) {
 
         if (beerService.updateById(beerId, beerDTO).isEmpty()) {
             throw new NotFoundException();
@@ -57,8 +58,12 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> listBeers() {
-        return beerService.listBeers();
+    public Page<BeerDTO> listBeers(@RequestParam(required = false) String beerName,
+                                   @RequestParam(required = false) BeerStyle beerStyle,
+                                   @RequestParam(required = false) Boolean showInventory,
+                                   @RequestParam(required = false) Integer pageNumber,
+                                   @RequestParam(required = false) Integer pageSize) {
+        return beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
     }
 
     @GetMapping(value = BEER_PATH_ID)
