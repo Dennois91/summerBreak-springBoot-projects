@@ -11,6 +11,7 @@ create table beer_order
     created_date datetime(6)  DEFAULT NULL,
     update_date  datetime(6)  DEFAULT NULL
 
+
 ) engine = InnoDB;
 
 create table beer_order_line
