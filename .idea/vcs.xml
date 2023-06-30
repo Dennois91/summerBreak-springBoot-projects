@@ -2,7 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/spring-6-resttemplate" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/spring-6-sdjpa-spring-data-rest" vcs="Git" />
   </component>
 </project>
