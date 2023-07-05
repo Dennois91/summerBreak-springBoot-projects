@@ -61,7 +61,7 @@ class BeerControllerIT {
     @Test
     void listBeersByStyleAndName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("pageSize", "800"))
@@ -72,7 +72,7 @@ class BeerControllerIT {
     @Test
     void listBeersByStyleAndNameShowInventoryFalseTest() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "false")
@@ -85,7 +85,7 @@ class BeerControllerIT {
     @Test
     void listBeersByStyleAndNameShowInventoryTrueTest() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
@@ -98,7 +98,7 @@ class BeerControllerIT {
     @Test
     void listBeersByStyleAndNameShowInventoryTruePage2Test() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
@@ -112,7 +112,7 @@ class BeerControllerIT {
     @Test
     void listBeersByNameTest() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("pageSize","800"))
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class BeerControllerIT {
     @Test
     void listBeersByStyleTest() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .queryParam("beerStyle", BeerStyle.ALE.name())
                         .queryParam("pageSize","1000"))
                 .andExpect(status().isOk())
@@ -242,7 +242,7 @@ class BeerControllerIT {
         beerMap.put("beerName", "123456789012345678901234567890123456789012345678901");
 
         MvcResult result = mockMvc.perform(patch(BeerController.BEER_PATH_ID, testBeer.getId())
-                        .with(httpBasic(BeerControllerTest.USERNAME,BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))

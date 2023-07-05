@@ -56,7 +56,7 @@ public class CustomerControllerTest {
         customerMap.put("customerName", "New name");
 
         mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerMap)))
@@ -74,7 +74,7 @@ public class CustomerControllerTest {
         given(customerService.deleteById(any())).willReturn(true);
 
         mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD)))
+                        .with(BeerControllerTest.jwtRequestPostProcessor))
                 .andExpect(status().isNoContent());
 
         verify(customerService).deleteById(uuidArgumentCaptor.capture());
@@ -88,7 +88,7 @@ public class CustomerControllerTest {
         given(customerService.updateById(any(), any())).willReturn(Optional.of(testCustomerDTO));
 
         mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testCustomerDTO)))
@@ -108,7 +108,7 @@ public class CustomerControllerTest {
         given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
 
         mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testCustomerDTO)))
@@ -120,7 +120,7 @@ public class CustomerControllerTest {
     public void listCustomersTest() throws Exception {
         given(customerService.listCustomers()).willReturn(customerServiceImpl.listCustomers());
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH)
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -134,7 +134,7 @@ public class CustomerControllerTest {
         given(customerService.getById(any(UUID.class))).willReturn(Optional.empty());
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID())
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD)))
+                        .with(BeerControllerTest.jwtRequestPostProcessor))
                 .andExpect(status().isNotFound());
     }
 
@@ -144,7 +144,7 @@ public class CustomerControllerTest {
 
         given(customerService.getById(testCustomerDTO.getId())).willReturn(Optional.of(testCustomerDTO));
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
-                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+                        .with(BeerControllerTest.jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
