@@ -51,6 +51,7 @@ public class BeerHandler {
                 .flatMap(savedDto -> ServerResponse.noContent().build());
     }
 
+
     public Mono<ServerResponse> updateBeerById(ServerRequest request) {
         return request.bodyToMono(BeerDTO.class)
                 .doOnNext(this::validate)
